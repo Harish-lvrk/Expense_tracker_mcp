@@ -16,6 +16,39 @@ It uses **FastMCP** to turn Python functions into MCP tools instantly, and **aio
 
 ---
 
+## Demo — Real Usage in Claude Desktop
+
+Once connected, just talk to Claude naturally:
+
+**Adding multiple expenses in one message:**
+> *"add the expense bought shoe of 2000 and went to barber shop 150 bought pen drive 456"*
+
+Claude automatically calls `add_expense` 3 times and replies:
+
+| Item | Category | Amount |
+|------|----------|--------|
+| Shoe | Shopping | ₹2,000 |
+| Barber Shop | Personal Care | ₹150 |
+| Pen Drive | Electronics | ₹456 |
+| **Total** | | **₹2,606** |
+
+**Summarizing expenses:**
+> *"summarize the expense"*
+
+| Category | Count | Total Amount |
+|----------|-------|-------------|
+| Shopping | 1 | ₹2,000 |
+| Electronics | 1 | ₹456 |
+| Personal Care | 1 | ₹150 |
+| **Total** | **3** | **₹2,606** |
+
+> *"Your biggest spend was on Shopping (Shoes) at ₹2,000, followed by Electronics (Pen Drive) at ₹456, and Personal Care (Barber) at ₹150."*
+
+No commands, no forms — just plain English. Claude figures out which tool to call and what parameters to use.
+
+---
+
+
 ## Project Structure
 
 ```
