@@ -194,23 +194,54 @@ uv run fastmcp dev inspector proxy.py
 
 Open `http://localhost:6274` to test the remote tools interactively in the browser.
 
-#### Step 5: (Alternative) Manually set up Claude Desktop config
+#### Step 5: (Alternative) Manually Configure Claude Desktop JSON
 
-If the `uv run fastmcp install` command doesn't work, you can manually edit the Claude Desktop config file.
+If the `uv run fastmcp install` command doesn't work, or you cloned this repo on a different machine, you can manually edit the Claude Desktop configuration file.
 
-**Config file location:**
-- **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+---
 
-Open the file and add the following inside `"mcpServers"`:
+**📁 Config file location:**
+
+| OS | Path |
+|----|------|
+| macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
+
+---
+
+**Step 5a: Find your project's absolute path**
+
+```bash
+cd test-remote-mcp-server && pwd
+```
+
+Example output: `/Users/yourname/Projects/test-remote-mcp-server`
+
+---
+
+**Step 5b: Open the config file**
+
+```bash
+# macOS
+open ~/Library/Application\ Support/Claude/claude_desktop_config.json
+
+# Or edit directly
+nano ~/Library/Application\ Support/Claude/claude_desktop_config.json
+```
+
+---
+
+**Step 5c: Add the server entry**
+
+The config file contains a `"mcpServers"` object. Add the following entry inside it:
 
 ```json
 {
   "mcpServers": {
     "ExpenseTrackerProxy": {
-      "command": "/absolute/path/to/test-remote-mcp-server/.venv/bin/python",
+      "command": "/Users/yourname/Projects/test-remote-mcp-server/.venv/bin/python",
       "args": [
-        "/absolute/path/to/test-remote-mcp-server/proxy.py"
+        "/Users/yourname/Projects/test-remote-mcp-server/proxy.py"
       ],
       "env": {
         "FASTMCP_TOKEN": "your_fastmcp_api_token_here"
@@ -221,17 +252,59 @@ Open the file and add the following inside `"mcpServers"`:
 }
 ```
 
-> ⚠️ Replace `/absolute/path/to/test-remote-mcp-server` with the actual path to your cloned repo, and `your_fastmcp_api_token_here` with your real API token.
+> 📝 Replace `yourname` with your actual macOS username and replace `your_fastmcp_api_token_here` with your real token from [horizon.prefect.io](https://horizon.prefect.io).
 
-**To find the full path:**
-```bash
-cd test-remote-mcp-server && pwd
+If you already have other servers in `"mcpServers"`, just add a comma and append the new entry:
+
+```json
+{
+  "mcpServers": {
+    "some-other-server": { ... },
+    "ExpenseTrackerProxy": {
+      "command": "/Users/yourname/Projects/test-remote-mcp-server/.venv/bin/python",
+      "args": [
+        "/Users/yourname/Projects/test-remote-mcp-server/proxy.py"
+      ],
+      "env": {
+        "FASTMCP_TOKEN": "your_fastmcp_api_token_here"
+      },
+      "transport": "stdio"
+    }
+  }
+}
 ```
 
-After editing, **restart Claude Desktop** — the server will appear in the MCP list.
+---
 
+**Step 5d: Verify the Python path exists**
+
+```bash
+ls /Users/yourname/Projects/test-remote-mcp-server/.venv/bin/python
+```
+
+If it doesn't exist, run `uv sync` inside the project first to create the virtual environment.
 
 ---
+
+**Step 5e: Restart Claude Desktop**
+
+Fully quit Claude Desktop (don't just close the window) and reopen it.
+
+- **macOS:** Right-click the Claude icon in dock → Quit, then reopen
+- You should see **ExpenseTrackerProxy** appear in the MCP servers list (click the `+` button in the chat input area)
+
+---
+
+**Step 5f: Verify it's working**
+
+In Claude Desktop, start a new chat and try:
+> *"what tools do you have for expense tracking?"*
+
+Claude should respond listing `add_expense`, `list_expenses`, and `summarize` — confirming the server connected successfully.
+
+---
+
+
 
 
 ## Issues We Faced (and How We Fixed Them)
