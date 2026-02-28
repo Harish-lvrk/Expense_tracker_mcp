@@ -1,10 +1,19 @@
-from fastmcp import FastMCP
+import os
+from dotenv import load_dotenv
+from fastmcp import Client
+from fastmcp.server import create_proxy
+from fastmcp.client.auth import BearerAuth
 
-# Create a proxy to your remote FastMCP Cloud server
-# FastMCP Cloud uses Streamable HTTP (default), so just use the /mcp URL
-mcp = FastMCP.as_proxy(
-    "https://splendid-gold-dingo.fastmcp.app/mcp",  # Standard FastMCP Cloud URL
-    name="Nitish Server Proxy"
+# Load token from .env file
+load_dotenv()
+TOKEN = os.environ.get("FASTMCP_TOKEN", "")
+
+# Create a proxy to your remote FastMCP Cloud server with auth
+mcp = create_proxy(
+    Client(
+        "https://scientific-gold-iguana.fastmcp.app/mcp",
+        auth=BearerAuth(TOKEN)
+    )
 )
 
 if __name__ == "__main__":
