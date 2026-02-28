@@ -145,13 +145,22 @@ echo "FASTMCP_TOKEN=your_token_here" > .env
 
 > ⚠️ Never commit `.env` to git — it's already in `.gitignore`.
 
-#### Step 3: Run the proxy with inspector
+#### Step 3: Install the proxy into Claude Desktop
+
+```bash
+uv run fastmcp install claude-desktop proxy.py
+```
+
+This registers the **remote proxy** as an MCP server in Claude Desktop. After restarting Claude Desktop, it will talk to your deployed cloud server automatically — no local server needed.
+
+#### Step 4: (Optional) Test with the MCP Inspector
 
 ```bash
 uv run fastmcp dev inspector proxy.py
 ```
 
-Open `http://localhost:6274` to test the remote tools.
+Open `http://localhost:6274` to test the remote tools interactively in the browser.
+
 
 ---
 
