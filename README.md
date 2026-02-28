@@ -194,8 +194,45 @@ uv run fastmcp dev inspector proxy.py
 
 Open `http://localhost:6274` to test the remote tools interactively in the browser.
 
+#### Step 5: (Alternative) Manually set up Claude Desktop config
+
+If the `uv run fastmcp install` command doesn't work, you can manually edit the Claude Desktop config file.
+
+**Config file location:**
+- **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+
+Open the file and add the following inside `"mcpServers"`:
+
+```json
+{
+  "mcpServers": {
+    "ExpenseTrackerProxy": {
+      "command": "/absolute/path/to/test-remote-mcp-server/.venv/bin/python",
+      "args": [
+        "/absolute/path/to/test-remote-mcp-server/proxy.py"
+      ],
+      "env": {
+        "FASTMCP_TOKEN": "your_fastmcp_api_token_here"
+      },
+      "transport": "stdio"
+    }
+  }
+}
+```
+
+> ⚠️ Replace `/absolute/path/to/test-remote-mcp-server` with the actual path to your cloned repo, and `your_fastmcp_api_token_here` with your real API token.
+
+**To find the full path:**
+```bash
+cd test-remote-mcp-server && pwd
+```
+
+After editing, **restart Claude Desktop** — the server will appear in the MCP list.
+
 
 ---
+
 
 ## Issues We Faced (and How We Fixed Them)
 
